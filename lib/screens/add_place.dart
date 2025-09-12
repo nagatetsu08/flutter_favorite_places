@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_favorite_place/widgets/image_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_favorite_place/provider/user_places.dart';
@@ -33,7 +34,7 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
 
     // onPressで定義されるので、watchではなくreadを使う
     ref.read(userPlacesProvider.notifier).addPlace(enteredTitle);
-    
+
     //保存に成功したら画面を離れる。
     Navigator.of(context).pop();
   }
@@ -65,6 +66,11 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
               ),
               controller: _titleController,
               style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
+            // Image Input
+            const SizedBox(height: 10),
+            ImageInput(
+
             ),
             const SizedBox(height: 16),
             // icon付きElevatedButtonff
