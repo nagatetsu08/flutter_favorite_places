@@ -34,11 +34,16 @@ class _ImageInputState extends State<ImageInput> {
     if(pickedImage == null) {
       return;
     }
-    // XFile型をFile型に変換している
+    // savedImageで確定するまではProviderに入れない方がいい。
+    // いれるとキャンセルしたやつが出ているというトラブルにつながる。
+    // 従って、この画面だけで有効なsetStateを使う。（=イメージプレビューはこのウィジェット内で完結。親ウィジェットにはFileオブジェクトだけ渡ればいい）
     setState(() {
+      // XFile型をFile型に変換している
       _selectedImage = File(pickedImage.path);
     });
 
+    // 親画面に選択した画像情報を渡す。
+    // 子から親へ情報を渡すやり方はこのコールバック方式が一般的。
     widget.onPickImage(_selectedImage!);
   }
 
@@ -53,6 +58,7 @@ class _ImageInputState extends State<ImageInput> {
 
     if(_selectedImage != null) {
       // 子ウィジェットのあらゆるジェスチャーに対応できる
+      // これをすると画像とったあとにさらに画像をタップすると再撮影ができる。
       content = GestureDetector(
         onTap: _takePicture,
         // ここでプレビュー表示するために、イメージがFile型である必要がある。

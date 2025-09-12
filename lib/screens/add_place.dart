@@ -72,6 +72,13 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
             ),
             // Image Input
             const SizedBox(height: 10),
+            // 子ウィジェットからイメージ情報を取得するやり方。
+            // イメージ以外でも活用可能
+            // 子から親へ情報を渡すやり方はこのコールバック方式が一般的。
+            // 1.子ウィジェットに受け取るコールバック関数を定義し、コンストラクタにも追加
+            // 2.子ウィジェットの中でwidget.コールバック関数（渡したい値やオブジェクト）を定義
+            // 3.親ウィジェットにて、子ウィジェットを呼び出す箇所で1と同名の関数を渡す定義を書いてやる。
+            //.  コールバック関数なので引数には渡された値。それを親で定義した変数にいれてやれば値の引き渡し完了
             ImageInput(
               onPickImage: (image) {
                 _selectedImage = image;
