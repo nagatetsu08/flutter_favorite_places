@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_favorite_place/widgets/image_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,17 +25,18 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   // バリデーションを加えたり、クリアとかセットができる。
   // onChangedのように値が変わる瞬間を検知したい場合は別途onChangedを仕掛けないとだめらしい。（変更検知→トリガーの仕組みはないらしい）
   final _titleController = TextEditingController();
+  File? _selectedImage;
 
   void _savePlace() {
     final enteredTitle = _titleController.text;
 
     // Controllerは値がnullでも必ずブランクのテキストを生成するのでnullチェックが必要ない。
-    if(enteredTitle.isEmpty) {
+    if(enteredTitle.isEmpty || _selectedImage == null) {
       return;
     }
 
     // onPressで定義されるので、watchではなくreadを使う
-    ref.read(userPlacesProvider.notifier).addPlace(enteredTitle);
+    ref.read(userPlacesProvider.notifier).addPlace(enteredTitle, _selectedImage!);
 
     //保存に成功したら画面を離れる。
     Navigator.of(context).pop();
@@ -70,7 +73,9 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
             // Image Input
             const SizedBox(height: 10),
             ImageInput(
-
+              onPickImage: (image) {
+                _selectedImage = image;
+              },
             ),
             const SizedBox(height: 16),
             // icon付きElevatedButtonff

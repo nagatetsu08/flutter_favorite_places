@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_favorite_place/models/place.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,8 +11,11 @@ class UserPlacesNortifier extends StateNotifier<List<Place>> {
   // 初期化のタイミングで変更できないようにして問題ないから。
   UserPlacesNortifier() : super(const []);
 
-  void addPlace(String title) {
-    final newPlace = Place(title: title);
+  void addPlace(String title, File image) {
+    final newPlace = Place(
+      title: title,
+      image: image
+    );
 
 
 

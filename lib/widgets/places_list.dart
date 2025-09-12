@@ -31,6 +31,10 @@ class PlacesList extends StatelessWidget{
       // アロー演算子で1行の場合はreturnを省略できる。{}の場合はreturn Listtile()にしないとだめ
       itemBuilder: (ctx, index) =>
         ListTile(
+          leading: CircleAvatar(
+            radius: 26,
+            backgroundImage: FileImage(places[index].image),
+          ),
           title: Text(
             places[index].title,
             // Flutterが裏側でもっているテーマに沿ったスタイルをまとめててきようできる。
