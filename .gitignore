@@ -48,3 +48,5 @@ pubspec.lock
 .vscode/
 
 .env
+AndroidManifest.xml
+/ios/Runner/AppDelegate.swift

@@ -42,6 +42,7 @@ dependencies:
   http: ^1.5.0
   envied: ^1.2.1
   flutter_dotenv: ^6.0.0
+  google_maps_flutter: ^2.13.1
 
 dev_dependencies:
   flutter_test:

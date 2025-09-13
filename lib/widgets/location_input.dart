@@ -24,10 +24,9 @@ class LocationInput extends StatefulWidget{
 
 class _LocationInputState extends State<LocationInput> {
 
-  final apiKey = dotenv.env['API_KEY'];
-
   PlaceLocation? _pickedLocation;
   var _isGettingLocation = false;
+  final apiKey = dotenv.env['API_KEY'];
 
   String get locationImage {
     if(_pickedLocation == null) {
