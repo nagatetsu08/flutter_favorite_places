@@ -51,5 +51,7 @@
 	<string>Pick your favorite place image</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Pick your favorite place image</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Pick your favorite place image</string>
 </dict>
 </plist>

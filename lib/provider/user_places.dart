@@ -11,10 +11,11 @@ class UserPlacesNortifier extends StateNotifier<List<Place>> {
   // 初期化のタイミングで変更できないようにして問題ないから。
   UserPlacesNortifier() : super(const []);
 
-  void addPlace(String title, File image) {
+  void addPlace(String title, File image, PlaceLocation location) {
     final newPlace = Place(
       title: title,
-      image: image
+      image: image,
+      location: location
     );
 
 

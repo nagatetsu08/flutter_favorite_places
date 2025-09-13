@@ -1,7 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_favorite_place/models/place.dart';
 import 'package:flutter_favorite_place/widgets/image_input.dart';
+import 'package:flutter_favorite_place/widgets/location_input.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:flutter_favorite_place/provider/user_places.dart';
@@ -26,17 +28,20 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   // onChangedのように値が変わる瞬間を検知したい場合は別途onChangedを仕掛けないとだめらしい。（変更検知→トリガーの仕組みはないらしい）
   final _titleController = TextEditingController();
   File? _selectedImage;
+  PlaceLocation? _selectedLocation;
 
   void _savePlace() {
     final enteredTitle = _titleController.text;
 
     // Controllerは値がnullでも必ずブランクのテキストを生成するのでnullチェックが必要ない。
-    if(enteredTitle.isEmpty || _selectedImage == null) {
+    if(enteredTitle.isEmpty || _selectedImage == null || _selectedLocation == null) {
       return;
     }
 
     // onPressで定義されるので、watchではなくreadを使う
-    ref.read(userPlacesProvider.notifier).addPlace(enteredTitle, _selectedImage!);
+    ref
+      .read(userPlacesProvider.notifier)
+      .addPlace(enteredTitle, _selectedImage!, _selectedLocation!);
 
     //保存に成功したら画面を離れる。
     Navigator.of(context).pop();
@@ -82,6 +87,12 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
             ImageInput(
               onPickImage: (image) {
                 _selectedImage = image;
+              },
+            ),
+            const SizedBox(height: 10),
+            LocationInput(
+              onSelectLocation: (location) {
+                _selectedLocation = location;
               },
             ),
             const SizedBox(height: 16),
