@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_favorite_place/screens/map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import 'package:location/location.dart';
 import 'package:http/http.dart' as http;
@@ -37,8 +39,36 @@ class _LocationInputState extends State<LocationInput> {
     return "https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&maptype=roadmap&markers=color:red%7Clabel:A%7C$lat,$lng&key=$apiKey";
   }
 
+  // 関数でasync awaitを使用する場合、正確にはFuture<T>型を戻り値に定義しないと正しく扱えないことがあるらしい
+  // なので関数をasncで定義する際はFuture<T>を戻り値にするというように覚える。
+  Future<void> _savePlace (double latitude, double longitude) async {
 
-  void _getCurrentLocation() async {
+    final endPoint = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=$latitude,$longitude&key=$apiKey';
+    final url = Uri.parse(endPoint);
+
+    final response = await http.get(url);
+    final resData = json.decode(response.body);
+
+    String address = '';
+    if (resData['results'] != null && resData['results'].isNotEmpty) {
+      address = resData['results'][0]['formatted_address'];
+    } else {
+      address = 'No address found';
+    }
+    // ローディング状態解除
+    setState(() {
+      _pickedLocation = PlaceLocation(
+        latitude: latitude, 
+        longitude: longitude, 
+        address: address
+      );
+      _isGettingLocation = false;    
+    });
+
+    widget.onSelectLocation(_pickedLocation!);
+  }
+
+  Future<void> _getCurrentLocation() async {
 
     Location location = Location();
 
@@ -76,29 +106,25 @@ class _LocationInputState extends State<LocationInput> {
       return;
     }
 
-    final endPoint = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$apiKey';
-    final url = Uri.parse(endPoint);
+    // データを保存する
+    _savePlace(lat, lng);
+  }
 
-    final response = await http.get(url);
-    final resData = json.decode(response.body);
-    String address = '';
-    if (resData['results'] != null && resData['results'].isNotEmpty) {
-      address = resData['results'][0]['formatted_address'];
-    } else {
-      address = 'No address found';
+  // この画面と前画面との間のやりとりかつまだ確定していないのでProviderを使ったやりとりはまだはやい。
+  // また画面の繊維とともに値を受け取ればいいので以下のやり方をする。
+  Future<void> _selectOnMap() async {
+    final pickedLocation = await Navigator.of(context).push<LatLng>(
+      MaterialPageRoute(builder: (ctx) => MapScreen()
+      ),
+    );
+
+    if (pickedLocation == null) {
+      return;
     }
 
-    // ローディング状態解除
-    setState(() {
-      _pickedLocation = PlaceLocation(
-        latitude: lat, 
-        longitude: lng, 
-        address: address
-      );
-      _isGettingLocation = false;    
-    });
+    // データを保存する
+    _savePlace(pickedLocation.latitude, pickedLocation.longitude);
 
-    widget.onSelectLocation(_pickedLocation!);
   }
 
 
@@ -153,7 +179,7 @@ class _LocationInputState extends State<LocationInput> {
             // Mapから位置を指定するボタン
             TextButton.icon(
               icon: Icon(Icons.map),
-              onPressed: () {}, 
+              onPressed: _selectOnMap, 
               label: const Text('Select on Map')
             ),
           ],

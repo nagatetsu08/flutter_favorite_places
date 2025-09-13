@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_favorite_place/models/place.dart';
+import 'package:flutter_favorite_place/screens/map.dart';
 
 class PlaceDetailScreen extends StatelessWidget{
   const PlaceDetailScreen({
@@ -41,9 +42,26 @@ class PlaceDetailScreen extends StatelessWidget{
             right: 0,   //上記画像の右0に接する（左と右で0にすると画面いっぱいにコンテンツを広げるという意味になる）
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 70,
-                  backgroundImage: NetworkImage(locationImage),
+                // CircleAvatarにはonTapイベントがない。
+                // このような「ないものに対してイベントを仕掛けたい」という場合に、GestureDetectorが役にたつ
+                GestureDetector(
+                  onTap: () {
+                    // この画面はすでにMAPとかが指定されている状態で表示されるので、locationとかすでに入っている。
+                    // そのためLocationは表示されているやつの情報を渡したいし、isSelectingはfalseを指定して指定したMAP情報を表示するようにする
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (ctx) => MapScreen(
+                          location: place.location,
+                          isSelecting: false
+                        )
+                      )
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 70,
+                    backgroundImage: NetworkImage(locationImage),
+                    
+                  ),
                 ),
                 Container(
                   alignment: Alignment.center,
