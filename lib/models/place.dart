@@ -29,7 +29,11 @@ class Place {
     required this.title,
     required this.image,
     required this.location,
-  }) : id = uuid.v4();
+    // DBからデータロードしてこのモデルを使ってインスタンスを作る際に外部から設定できるようにする。
+    // ただし、新規登録時はuuidを元にでIDを生成するようにするために以下のようなコードにする。
+    // インスタンス作成時にidがnullだった場合（つまり何も渡さなかったとき）は、uuidを作成する。
+    String? id,
+  }) : id = id ?? uuid.v4();
 
   final String id;
   final String title;
