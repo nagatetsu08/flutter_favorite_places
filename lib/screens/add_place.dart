@@ -85,9 +85,9 @@ class _AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
             // 3.親ウィジェットにて、子ウィジェットを呼び出す箇所で1と同名の関数を渡す定義を書いてやる。
             //.  コールバック関数なので引数には渡された値。それを親で定義した変数にいれてやれば値の引き渡し完了
             ImageInput(
-              onPickImage: (image) {
-                _selectedImage = image;
-              },
+                onPickImage: (image) {
+                  _selectedImage = image;
+                },
             ),
             const SizedBox(height: 10),
             LocationInput(

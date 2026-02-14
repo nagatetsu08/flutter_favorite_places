@@ -54,9 +54,6 @@ class _PlacesScreenState extends ConsumerState<PlacesScreen> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        // child: PlacesList(
-        //   places: userPlaces,
-        // ),
 
         // Futureが解決したら自動でレンダリングしてくれる仕組み
         child: FutureBuilder(
